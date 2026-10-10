@@ -1,0 +1,9 @@
+{
+  "uuid": "aj-netusage@local",
+  "name": "AJ-NetUsage",
+  "description": "Live network, CPU and RAM usage in the top bar.",
+  "version-name": "1.0",
+  "shell-version": ["50"],
+  "url": "https://github.com/abdallah-jasem/AJ-NetUsage",
+  "settings-schema": "org.gnome.shell.extensions.aj-netusage"
+}

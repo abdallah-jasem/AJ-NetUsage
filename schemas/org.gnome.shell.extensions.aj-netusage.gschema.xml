@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.aj-netusage" path="/org/gnome/shell/extensions/aj-netusage/">
+    <key name="refresh-interval" type="i">
+      <range min="1" max="10"/>
+      <default>1</default>
+      <summary>Refresh interval in seconds</summary>
+    </key>
+    <key name="show-cpu" type="b">
+      <default>true</default>
+      <summary>Show CPU usage in the top bar</summary>
+    </key>
+    <key name="show-ram" type="b">
+      <default>true</default>
+      <summary>Show RAM usage in the top bar</summary>
+    </key>
+    <key name="skip-interfaces" type="as">
+      <default>['lo', 'docker', 'veth', 'br-', 'virbr', 'tun', 'tap', 'wg', 'proton', 'ipv6leakintrf']</default>
+      <summary>Interface name prefixes left out of the totals (VPN and virtual interfaces double-count traffic)</summary>
+    </key>
+  </schema>
+</schemalist>
