@@ -6,14 +6,10 @@
   spacing: 4px;
 }
 
+/* Equal-width digits, so values only change width when the unit changes. */
 .aj-netusage-value {
   font-feature-settings: "tnum";
 }
-
-/* Fixed widths for the widest possible text; tune here if your font differs. */
-.aj-netusage-speed { width: 5.6em; } /* "99.9 KB/s" */
-.aj-netusage-cpu   { width: 2.6em; } /* "100%" */
-.aj-netusage-ram   { width: 4em; }   /* "99.9 GB" */
 
 .aj-netusage-details {
   font-family: monospace;

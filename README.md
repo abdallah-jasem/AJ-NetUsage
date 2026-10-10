@@ -10,7 +10,7 @@ Click it to see more:
 
 - 100% local: reads Linux counters from `/proc`, no internet, no tracking, no dependencies
 - Lightweight: one tiny read per second, never blocks your desktop
-- Steady top bar: fixed-width values, so nothing jumps around
+- Steady top bar: each value has a fixed width measured from your font, so nothing jumps around
 - Smart about VPNs and Docker: their traffic is not counted twice
 - Settings window for refresh speed and what to show
 
@@ -86,7 +86,7 @@ src/memory.js      RAM from /proc/meminfo
 src/format.js      bytes -> "1.2 MB"
 src/indicator.js   top bar button + popup
 schemas/           settings (GSettings) schema
-stylesheet.css     top bar widths and fonts
+stylesheet.css     top bar spacing and fonts
 test.js            unit checks for the pure modules
 install.sh         installer
 ```
@@ -103,3 +103,7 @@ Package a zip:
 ```sh
 gnome-extensions pack --extra-source=src --extra-source=README.md
 ```
+
+## License
+
+GPL-2.0-or-later. See [LICENSE](LICENSE).

@@ -11,10 +11,10 @@ class Indicator extends PanelMenu.Button {
 
         const box = new St.BoxLayout({style_class: 'aj-netusage-box'});
         this.add_child(box);
-        this._down = this._addField(box, '↓', 'aj-netusage-speed');
-        this._up = this._addField(box, '↑', 'aj-netusage-speed');
-        this._cpu = this._addField(box, 'CPU', 'aj-netusage-cpu');
-        this._ram = this._addField(box, 'RAM', 'aj-netusage-ram');
+        this._down = this._addField(box, '↓', '99.9 MB/s');
+        this._up = this._addField(box, '↑', '99.9 MB/s');
+        this._cpu = this._addField(box, 'CPU', '100%');
+        this._ram = this._addField(box, 'RAM', '99.9 GB');
 
         // One multi-line label instead of one menu item per row: no rebuilding every tick.
         this._details = new St.Label({text: '…', style_class: 'aj-netusage-details'});
@@ -25,19 +25,28 @@ class Indicator extends PanelMenu.Button {
         this.menu.addAction('Preferences', openPrefs);
     }
 
-    // "prefix [   value]": the value sits right-aligned in a fixed-width bin (width set in
-    // stylesheet.css), so changing numbers or units never shifts the top bar.
-    _addField(box, prefix, widthClass) {
+    // "prefix value   ": the value sits right after its prefix, in a bin exactly as wide as
+    // the widest text it can show (measured in the real panel font, so no guessed widths).
+    // Changing numbers or units never shifts the rest of the top bar.
+    _addField(box, prefix, widest) {
         const field = new St.BoxLayout({style_class: 'aj-netusage-field'});
         field.add_child(new St.Label({text: prefix, y_align: Clutter.ActorAlign.CENTER}));
         const value = new St.Label({
             text: '—',
             style_class: 'aj-netusage-value',
-            x_align: Clutter.ActorAlign.END,
+            x_align: Clutter.ActorAlign.START,
             x_expand: true,
             y_align: Clutter.ActorAlign.CENTER,
         });
-        field.add_child(new St.Bin({style_class: widthClass, child: value}));
+        const bin = new St.Bin({child: value});
+        // style-changed fires once the panel font is applied (and again if the theme changes).
+        value.connect('style-changed', () => {
+            const text = value.text;
+            value.text = widest;
+            bin.width = value.get_preferred_width(-1)[1]; // sets min and natural width
+            value.text = text;
+        });
+        field.add_child(bin);
         box.add_child(field);
         return {field, value};
     }
