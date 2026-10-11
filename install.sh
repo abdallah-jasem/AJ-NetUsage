@@ -8,7 +8,7 @@
 #     ./install.sh
 set -euo pipefail
 
-UUID=aj-netusage@local
+UUID=aj-netusage@abdallah-jasem.github.io
 REPO=https://github.com/abdallah-jasem/AJ-NetUsage.git
 DEST="$HOME/.local/share/gnome-shell/extensions/$UUID"
 SRC="$(cd "$(dirname "${BASH_SOURCE[0]:-}")" && pwd)"

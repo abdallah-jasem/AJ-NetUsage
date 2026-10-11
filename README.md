@@ -47,7 +47,7 @@ Run the same install command again, then log out and back in.
 Click the indicator → **Preferences**, or run:
 
 ```sh
-gnome-extensions prefs aj-netusage@local
+gnome-extensions prefs aj-netusage@abdallah-jasem.github.io
 ```
 
 | Setting | Default | What it does |
@@ -60,8 +60,8 @@ gnome-extensions prefs aj-netusage@local
 ## Uninstall
 
 ```sh
-gnome-extensions disable aj-netusage@local
-rm -rf ~/.local/share/gnome-shell/extensions/aj-netusage@local
+gnome-extensions disable aj-netusage@abdallah-jasem.github.io
+rm -rf ~/.local/share/gnome-shell/extensions/aj-netusage@abdallah-jasem.github.io
 ```
 
 ## How it works
@@ -98,10 +98,10 @@ journalctl -f -o cat /usr/bin/gnome-shell   # logs
 glib-compile-schemas schemas/               # after editing the schema
 ```
 
-Package a zip:
+Package the zip for [extensions.gnome.org](https://extensions.gnome.org/upload/):
 
 ```sh
-gnome-extensions pack --extra-source=src --extra-source=README.md
+gnome-extensions pack --force --extra-source=src
 ```
 
 ## License
