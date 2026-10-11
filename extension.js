@@ -1,3 +1,4 @@
+import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
@@ -8,12 +9,18 @@ import {CpuMonitor} from './src/cpu.js';
 import {parseMeminfo} from './src/memory.js';
 import {formatBytes} from './src/format.js';
 
-const decoder = new TextDecoder();
-
-// /proc files live in kernel memory: a sync read takes microseconds and never blocks on disk.
-function read(path) {
-    const [, bytes] = GLib.file_get_contents(path);
-    return decoder.decode(bytes);
+// Async read, so the shell main loop is never blocked (review guideline: no sync file IO).
+function readAsync(path, cancellable) {
+    return new Promise((resolve, reject) => {
+        Gio.File.new_for_path(path).load_contents_async(cancellable, (file, result) => {
+            try {
+                const [, bytes] = file.load_contents_finish(result);
+                resolve(new TextDecoder().decode(bytes));
+            } catch (e) {
+                reject(e);
+            }
+        });
+    });
 }
 
 export default class AJNetUsageExtension extends Extension {
@@ -22,10 +29,10 @@ export default class AJNetUsageExtension extends Extension {
         this._net = new NetworkMonitor();
         this._cpu = new CpuMonitor();
         this._last = null;
+        this._cancellable = new Gio.Cancellable();
 
         this._indicator = new Indicator(() => this.openPreferences());
-        // Signals on our own indicator die with indicator.destroy(); no manual disconnect needed.
-        this._indicator.menu.connect('open-state-changed', (_menu, open) => {
+        this._menuId = this._indicator.menu.connect('open-state-changed', (_menu, open) => {
             if (open)
                 this._renderDetails();
         });
@@ -40,7 +47,10 @@ export default class AJNetUsageExtension extends Extension {
             GLib.Source.remove(this._timerId);
             this._timerId = 0;
         }
+        this._cancellable.cancel(); // drops any read still in flight
+        this._cancellable = null;
         this._settings.disconnect(this._settingsId);
+        this._indicator.menu.disconnect(this._menuId);
         this._indicator.destroy();
         this._indicator = null;
         this._settings = null;
@@ -62,11 +72,17 @@ export default class AJNetUsageExtension extends Extension {
         this._tick();
     }
 
-    _tick() {
+    async _tick() {
+        const cancellable = this._cancellable;
         try {
-            const net = this._net.update(read('/proc/net/dev'), GLib.get_monotonic_time());
-            const cpu = this._cpu.update(read('/proc/stat'));
-            const mem = parseMeminfo(read('/proc/meminfo'));
+            const [netText, statText, memText] = await Promise.all(
+                ['/proc/net/dev', '/proc/stat', '/proc/meminfo'].map(p => readAsync(p, cancellable)));
+            if (cancellable.is_cancelled())
+                return;
+
+            const net = this._net.update(netText, GLib.get_monotonic_time());
+            const cpu = this._cpu.update(statText);
+            const mem = parseMeminfo(memText);
             this._last = {net, cpu, mem};
 
             this._indicator.setValues(
@@ -79,6 +95,9 @@ export default class AJNetUsageExtension extends Extension {
             if (this._indicator.menu.isOpen)
                 this._renderDetails();
         } catch (e) {
+            // Cancelled = extension was disabled mid-read; nothing to do.
+            if (e.matches?.(Gio.IOErrorEnum, Gio.IOErrorEnum.CANCELLED))
+                return;
             // Never let one bad read kill the timer.
             console.error('AJ-NetUsage:', e);
         }
