@@ -23,6 +23,16 @@ export default class AJNetUsagePreferences extends ExtensionPreferences {
             group.add(row);
         }
 
+        const positions = ['left', 'center', 'right'];
+        const position = new Adw.ComboRow({
+            title: 'Position in top bar',
+            model: Gtk.StringList.new(['Left', 'Center', 'Right']),
+            selected: positions.indexOf(settings.get_string('position')),
+        });
+        position.connect('notify::selected', () =>
+            settings.set_string('position', positions[position.selected]));
+        group.add(position);
+
         const skip = new Adw.EntryRow({
             title: 'Ignored interface prefixes (comma-separated)',
             text: settings.get_strv('skip-interfaces').join(', '),

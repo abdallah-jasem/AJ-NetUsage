@@ -14,6 +14,15 @@
       <default>true</default>
       <summary>Show RAM usage in the top bar</summary>
     </key>
+    <key name="position" type="s">
+      <choices>
+        <choice value="left"/>
+        <choice value="center"/>
+        <choice value="right"/>
+      </choices>
+      <default>'right'</default>
+      <summary>Which part of the top bar the indicator sits in</summary>
+    </key>
     <key name="skip-interfaces" type="as">
       <default>['lo', 'docker', 'veth', 'br-', 'virbr', 'tun', 'tap', 'wg', 'proton', 'ipv6leakintrf']</default>
       <summary>Interface name prefixes left out of the totals (VPN and virtual interfaces double-count traffic)</summary>

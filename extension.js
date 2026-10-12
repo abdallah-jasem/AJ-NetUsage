@@ -36,7 +36,7 @@ export default class AJNetUsageExtension extends Extension {
             if (open)
                 this._renderDetails();
         });
-        Main.panel.addToStatusArea(this.uuid, this._indicator);
+        Main.panel.addToStatusArea(this.uuid, this._indicator); // right; _place() moves it
 
         this._settingsId = this._settings.connect('changed', () => this._applySettings());
         this._applySettings(); // starts the timer and primes the "previous" readings
@@ -61,6 +61,7 @@ export default class AJNetUsageExtension extends Extension {
 
     _applySettings() {
         this._net.skip = this._settings.get_strv('skip-interfaces');
+        this._place();
 
         if (this._timerId)
             GLib.Source.remove(this._timerId);
@@ -70,6 +71,18 @@ export default class AJNetUsageExtension extends Extension {
                 return GLib.SOURCE_CONTINUE;
             });
         this._tick();
+    }
+
+    // Move the indicator when the position setting changes. Left/center: after what is
+    // already there; right: first, like addToStatusArea's default.
+    _place() {
+        const pos = this._settings.get_string('position');
+        const box = Main.panel[`_${pos}Box`];
+        const container = this._indicator.container;
+        if (container.get_parent() === box)
+            return;
+        container.get_parent().remove_child(container);
+        box.insert_child_at_index(container, pos === 'right' ? 0 : -1);
     }
 
     async _tick() {

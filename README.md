@@ -12,7 +12,7 @@ Click it to see more:
 - Lightweight: one tiny read per second, never blocks your desktop
 - Steady top bar: each value has a fixed width measured from your font, so nothing jumps around. On a crowded top bar it shrinks instead of covering the clock
 - Smart about VPNs and Docker: their traffic is not counted twice
-- Settings window for refresh speed and what to show
+- Settings window for refresh speed, what to show, and where it sits (left, center, or right)
 
 Requires **GNOME Shell 50** (Ubuntu, Fedora, ...).
 
@@ -55,6 +55,7 @@ gnome-extensions prefs aj-netusage@abdallah-jasem.github.io
 | Refresh interval | 1 s | How often numbers update (1-10 s) |
 | Show CPU | on | CPU % in the top bar |
 | Show RAM | on | RAM in the top bar |
+| Position in top bar | right | Left, center, or right side of the top bar |
 | Ignored interface prefixes | lo, docker, veth, br-, virbr, tun, tap, wg, proton, ipv6leakintrf | Interfaces left out of the totals. VPN and virtual interfaces carry traffic that already went through your real Wi-Fi/Ethernet card. They still show in the popup (marked `*`) when active |
 
 ## Uninstall
