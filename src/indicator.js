@@ -43,7 +43,9 @@ class Indicator extends PanelMenu.Button {
         value.connect('style-changed', () => {
             const text = value.text;
             value.text = widest;
-            bin.width = value.get_preferred_width(-1)[1]; // sets min and natural width
+            // Natural width only: if the panel runs out of room the label ellipsizes
+            // instead of painting over the clock.
+            bin.natural_width = value.get_preferred_width(-1)[1];
             value.text = text;
         });
         field.add_child(bin);

@@ -1,9 +1,9 @@
 .aj-netusage-box {
-  spacing: 12px;
+  spacing: 6px;
 }
 
 .aj-netusage-field {
-  spacing: 4px;
+  spacing: 2px;
 }
 
 /* Equal-width digits, so values only change width when the unit changes. */

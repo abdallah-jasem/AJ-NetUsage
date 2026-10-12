@@ -10,7 +10,7 @@ Click it to see more:
 
 - 100% local: reads Linux counters from `/proc`, no internet, no tracking, no dependencies
 - Lightweight: one tiny read per second, never blocks your desktop
-- Steady top bar: each value has a fixed width measured from your font, so nothing jumps around
+- Steady top bar: each value has a fixed width measured from your font, so nothing jumps around. On a crowded top bar it shrinks instead of covering the clock
 - Smart about VPNs and Docker: their traffic is not counted twice
 - Settings window for refresh speed and what to show
 
