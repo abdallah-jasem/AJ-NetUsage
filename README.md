@@ -14,6 +14,8 @@ Click it to see more:
 - Smart about VPNs and Docker: their traffic is not counted twice
 - Settings window for refresh speed, what to show, and where it sits (left, center, or right)
 
+![Preferences](image/preferences.png)
+
 Requires **GNOME Shell 50** (Ubuntu, Fedora, ...).
 
 ## Install
